@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Mathematics: Anatomy of Solids</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e67e22;
+            --success: #27ae60;
+            --bg: #f4f7f6;
+            --text: #333;
+        }
+
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+        body {
+            margin: 0;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            display: block;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            border-radius: 0 0 20px 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+        }
+
+        h2 { color: var(--secondary); border-bottom: 2px solid #eee; padding-bottom: 10px; }
+
+        /* 3D Cube Styles */
+        .scene {
+            width: 200px;
+            height: 200px;
+            perspective: 600px;
+            margin: 50px auto;
+        }
+
+        .cube {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transform: rotateX(-20deg) rotateY(-30deg);
+            transition: transform 0.1s;
+        }
+
+        .cube__face {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border: 2px solid var(--primary);
+            line-height: 200px;
+            font-size: 20px;
+            font-weight: bold;
+            color: white;
+            text-align: center;
+            background: rgba(52, 152, 219, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cube__face--front  { transform: rotateY(  0deg) translateZ(100px); }
+        .cube__face--right  { transform: rotateY( 90deg) translateZ(100px); }
+        .cube__face--back   { transform: rotateY(180deg) translateZ(100px); }
+        .cube__face--left   { transform: rotateY(-90deg) translateZ(100px); }
+        .cube__face--top    { transform: rotateX( 90deg) translateZ(100px); }
+        .cube__face--bottom { transform: rotateX(-90deg) translateZ(100px); }
+
+        .controls {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        button {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+
+        button:hover { background: #2980b9; }
+
+        .btn-anatomy { margin: 5px; background: var(--accent); }
+
+        /* Highlight classes */
+        .highlight-face { background: rgba(231, 76, 60, 0.8) !important; }
+        .highlight-vertex::after {
+            content: '';
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background: yellow;
+            border-radius: 50%;
+            top: -7.5px;
+            left: -7.5px;
+            z-index: 10;
+        }
+
+        /* Quiz Styles */
+        .quiz-option {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: left;
+        }
+
+        .quiz-option:hover { background: #e9ecef; }
+        .correct { background: var(--success) !important; color: white; }
+        .wrong { background: #e74c3c !important; color: white; }
+
+        /* Anatomy Log Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+        }
+
+        th { background: #eee; }
+
+        input[type="number"], input[type="text"] {
+            width: 60px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .feedback {
+            margin-top: 10px;
+            font-weight: bold;
+            min-height: 24px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Class 5: The Anatomy of Solids</h1>
+    <p>Explore Cubes and Cuboids Interactively</p>
+</header>
+
+<div class="container">
+    <!-- Section 1: 3D Visualization -->
+    <div class="card">
+        <h2>1. Meet the Cuboid</h2>
+        <p>Rotate the shape to see its structure. Click the buttons to identify its parts.</p>
+        
+        <div class="scene">
+            <div class="cube" id="cube">
+                <div class="cube__face cube__face--front" id="f1">Face</div>
+                <div class="cube__face cube__face--back" id="f2">Face</div>
+                <div class="cube__face cube__face--right" id="f3">Face</div>
+                <div class="cube__face cube__face--left" id="f4">Face</div>
+                <div class="cube__face cube__face--top" id="f5">Face</div>
+                <div class="cube__face cube__face--bottom" id="f6">Face</div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn-anatomy" onclick="toggleAnatomy('face')">Show Faces</button>
+            <button class="btn-anatomy" onclick="toggleAnatomy('vertex')">Show Vertices</button>
+            <button class="btn-anatomy" onclick="toggleAnatomy('edge')">Show Edges</button>
+            <p id="anatomy-desc" style="margin-top:15px; font-style: italic; color: #666;"></p>
+        </div>
+    </div>
+
+    <!-- Section 2: The Counting Drill -->
+    <div class="card">
+        <h2>2. The Counting Drill</h2>
+        <p>Based on your observation of a standard cuboid (like a brick), answer the following:</p>
+        
+        <div id="quiz-container">
+            <p><strong>How many flat surfaces (Faces) does it have?</strong></p>
+            <button class="quiz-option" onclick="checkQuiz(this, 6)">4 Faces</button>
+            <button class="quiz-option" onclick="checkQuiz(this, 6)">6 Faces</button>
+            <button class="quiz-option" onclick="checkQuiz(this, 6)">8 Faces</button>
+            <div class="feedback" id="quiz-feedback"></div>
+        </div>
+    </div>
+
+    <!-- Section 3: Technical Profile Log -->
+    <div class="card">
+        <h2>3. Object Anatomy Log</h2>
+        <p>Record your findings from the classroom search here. Does every cuboid follow the 6-12-8 rule?</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Object Name</th>
+                    <th>Faces</th>
+                    <th>Edges</th>
+                    <th>Vertices</th>
+                    <th>Check</th>
+                </tr>
+            </thead>
+            <tbody id="log-body">
+                <tr>
+                    <td><input type="text" placeholder="e.g. Brick"></td>
+                    <td><input type="number" class="f-val"></td>
+                    <td><input type="number" class="e-val"></td>
+                    <td><input type="number" class="v-val"></td>
+                    <td><button onclick="verifyRow(this)">Verify</button></td>
+                </tr>
+            </tbody>
+        </table>
+        <button style="margin-top: 15px;" onclick="addRow()">+ Add Object</button>
+    </div>
+
+    <!-- Section 4: Exit Ticket -->
+    <div class="card" style="background: #fff3e0; border: 2px solid var(--accent);">
+        <h2>Exit Ticket Challenge</h2>
+        <p>If I join two cubes together side-by-side to make a long cuboid, how many <strong>Vertices</strong> does the new shape have?</p>
+        <input type="number" id="exit-val" style="width: 100px; padding: 10px; font-size: 1.2rem;">
+        <button onclick="checkExit()">Submit Answer</button>
+        <p id="exit-feedback" class="feedback"></p>
+    </div>
+</div>
+
+<script>
+    // 3D Cube Rotation Logic
+    let cube = document.getElementById('cube');
+    let angleX = -20;
+    let angleY = -30;
+
+    document.addEventListener('keydown', (e) => {
+        if(e.key === 'ArrowUp') angleX += 5;
+        if(e.key === 'ArrowDown') angleX -= 5;
+        if(e.key === 'ArrowLeft') angleY -= 5;
+        if(e.key === 'ArrowRight') angleY += 5;
+        cube.style.transform = `rotateX(${angleX}deg) rotateY(${angleY}deg)`;
+    });
+
+    function toggleAnatomy(part) {
+        const faces = document.querySelectorAll('.cube__face');
+        const desc = document.getElementById('anatomy-desc');
+        
+        // Reset
+        faces.forEach(f => {
+            f.classList.remove('highlight-face');
+            f.style.border = "2px solid var(--primary)";
+        });
+
+        if(part === 'face') {
+            faces.forEach(f => f.classList.add('highlight-face'));
+            desc.innerText = "A Face is a flat surface. A cuboid has 6 faces.";
+        } else if (part === 'vertex') {
+            desc.innerText = "A Vertex is a corner where edges meet. A cuboid has 8 vertices.";
+            alert("Look at the corners! Use the 'dot' method from Activity 1.");
+        } else if (part === 'edge') {
+            faces.forEach(f => f.style.border = "5px solid yellow");
+            desc.innerText = "An Edge is a line segment where two faces meet. A cuboid has 12 edges.";
+        }
+    }
+
+    function checkQuiz(btn, correctVal) {
+        const feedback = document.getElementById('quiz-feedback');
+        if(btn.innerText.includes(correctVal)) {
+            btn.classList.add('correct');
+            feedback.innerText = "Correct! 6 Faces make the box complete.";
+            feedback.style.color = "var(--success)";
+        } else {
+            btn.classList.add('wrong');
+            feedback.innerText = "Try again! Look at the 3D model above.";
+            feedback.style.color = "red";
+        }
+    }
+
+    function verifyRow(btn) {
+        const row = btn.parentElement.parentElement;
+        const f = parseInt(row.querySelector('.f-val').value);
+        const e = parseInt(row.querySelector('.e-val').value);
+        const v = parseInt(row.querySelector('.v-val').value);
+
+        if(f === 6 && e === 12 && v === 8) {
+            btn.innerText = "✅ Perfect";
+            btn.style.background = "var(--success)";
+        } else {
+            alert("Hmm, check your count again. Remember the 6-12-8 rule!");
+        }
+    }
+
+    function addRow() {
+        const tbody = document.getElementById('log-body');
+        const newRow = document.createElement('tr');
+        newRow.innerHTML = `
+            <td><input type="text"></td>
+            <td><input type="number" class="f-val"></td>
+            <td><input type="number" class="e-val"></td>
+            <td><input type="number" class="v-val"></td>
+            <td><button onclick="verifyRow(this)">Verify</button></td>
+        `;
+        tbody.appendChild(newRow);
+    }
+
+    function checkExit() {
+        const val = document.getElementById('exit-val').value;
+        const feedback = document.getElementById('exit-feedback');
+        if(val == 8) {
+            feedback.innerText = "Correct! Even though it's longer, it still has only 8 corners.";
+            feedback.style.color = "var(--success)";
+        } else {
+            feedback.innerText = "Close! Think: did any new corners appear, or did some join together?";
+            feedback.style.color = "red";
+        }
+    }
+</script>
+
+</body>
+</html>
