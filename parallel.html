@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 5: Parallel & Perpendicular Lines</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --parallel-color: #3498db;
+            --perp-color: #e74c3c;
+            --bg: #f4f7f6;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--primary);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        h1 { text-align: center; color: var(--primary); border-bottom: 3px solid #eee; padding-bottom: 10px; }
+        
+        .nav-tabs {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 30px;
+            background: #eee;
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .tab.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .content-section { display: none; animation: fadeIn 0.5s; }
+        .content-section.active { display: block; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Interactive Elements */
+        .visual-box {
+            border: 2px dashed #ccc;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            margin: 20px 0;
+            position: relative;
+            background: #fff;
+        }
+
+        .symbol-card {
+            display: inline-block;
+            padding: 20px;
+            margin: 10px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            width: 200px;
+        }
+
+        .big-symbol { font-size: 50px; font-weight: bold; display: block; }
+        .parallel-text { color: var(--parallel-color); }
+        .perp-text { color: var(--perp-color); }
+
+        /* Canvas Styles */
+        #drawingCanvas {
+            border: 1px solid #000;
+            background-image: linear-gradient(#eee 1px, transparent 1px), linear-gradient(90deg, #eee 1px, transparent 1px);
+            background-size: 20px 20px;
+            cursor: crosshair;
+            touch-action: none;
+        }
+
+        .controls { margin-top: 10px; }
+        button {
+            padding: 10px 15px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background: #34495e;
+            color: white;
+        }
+
+        button:hover { opacity: 0.9; }
+
+        .detective-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .example-img {
+            width: 100%;
+            height: 150px;
+            background: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>📏 Lines That Meet & Never Do</h1>
+
+    <div class="nav-tabs">
+        <div class="tab active" onclick="showTab(0)">1. Warm Up</div>
+        <div class="tab" onclick="showTab(1)">2. The Rules</div>
+        <div class="tab" onclick="showTab(2)">3. Activity: Discovery</div>
+        <div class="tab" onclick="showTab(3)">4. Line Detective</div>
+    </div>
+
+    <!-- Section 1: Warm Up -->
+    <div id="section0" class="content-section active">
+        <h2>The Train Track Test</h2>
+        <p>Think about a train track. Do the two metal rails ever touch? If they did, what would happen to the train?</p>
+        <div class="visual-box">
+            <svg width="400" height="100">
+                <line x1="0" y1="30" x2="400" y2="30" stroke="#555" stroke-width="8" />
+                <line x1="0" y1="70" x2="400" y2="70" stroke="#555" stroke-width="8" />
+                <!-- Sleepers -->
+                <line x1="20" y1="20" x2="20" y2="80" stroke="#8b4513" stroke-width="5" />
+                <line x1="60" y1="20" x2="60" y2="80" stroke="#8b4513" stroke-width="5" />
+                <line x1="100" y1="20" x2="100" y2="80" stroke="#8b4513" stroke-width="5" />
+                <line x1="140" y1="20" x2="140" y2="80" stroke="#8b4513" stroke-width="5" />
+                <line x1="180" y1="20" x2="180" y2="80" stroke="#8b4513" stroke-width="5" />
+            </svg>
+            <p>These are <b>Parallel Lines</b>. They stay the same distance apart forever!</p>
+        </div>
+    </div>
+
+    <!-- Section 2: The Rules -->
+    <div id="section1" class="content-section">
+        <h2>Meet the Symbols</h2>
+        <div style="text-align:center">
+            <div class="symbol-card">
+                <span class="big-symbol parallel-text">∥</span>
+                <p><b>Parallel</b></p>
+                <small>Lines that never meet</small>
+            </div>
+            <div class="symbol-card">
+                <span class="big-symbol perp-text">⊥</span>
+                <p><b>Perpendicular</b></p>
+                <small>Lines that meet at 90°</small>
+            </div>
+        </div>
+        <div class="visual-box">
+            <h3>The Alphabet Test</h3>
+            <p>Look at the letter <b>H</b>. The tall sides are <span class="parallel-text">Parallel (∥)</span>. The middle bar is <span class="perp-text">Perpendicular (⊥)</span> to the sides!</p>
+        </div>
+    </div>
+
+    <!-- Section 3: Discovery -->
+    <div id="section2" class="content-section">
+        <h2>Activity: Grid Drawing</h2>
+        <p>Use the digital grid below to draw your own lines. Practice drawing a <b>horizontal</b> line and 3 <b>vertical</b> lines.</p>
+        
+        <canvas id="drawingCanvas" width="800" height="300"></canvas>
+        <div class="controls">
+            <button onclick="setMode('parallel')" style="background:var(--parallel-color)">Draw Parallel (Blue)</button>
+            <button onclick="setMode('perp')" style="background:var(--perp-color)">Draw Perpendicular (Red)</button>
+            <button onclick="clearCanvas()" style="background:#7f8c8d">Clear Canvas</button>
+        </div>
+        <p><small>Instruction: Parallel lines should be blue, Perpendicular intersections should be marked red!</small></p>
+    </div>
+
+    <!-- Section 4: Line Detective -->
+    <div id="section3" class="content-section">
+        <h2>Line Detective Project</h2>
+        <p>Can you find these lines in our classroom door?</p>
+        <div class="detective-grid">
+            <div class="visual-box">
+                <svg width="150" height="200" viewBox="0 0 100 150">
+                    <!-- Door -->
+                    <rect x="10" y="10" width="80" height="130" fill="none" stroke="black" stroke-width="3"/>
+                    <circle cx="80" cy="75" r="4" fill="gold" />
+                    <!-- Highlight lines -->
+                    <line x1="10" y1="10" x2="90" y2="10" stroke="red" stroke-width="4" stroke-dasharray="4" />
+                    <line x1="10" y1="10" x2="10" y2="140" stroke="red" stroke-width="4" stroke-dasharray="4" />
+                </svg>
+                <p class="perp-text"><b>Corner = ⊥</b></p>
+            </div>
+            <div class="visual-box">
+                <svg width="150" height="200" viewBox="0 0 100 150">
+                    <rect x="10" y="10" width="80" height="130" fill="none" stroke="black" stroke-width="3"/>
+                    <line x1="10" y1="10" x2="10" y2="140" stroke="blue" stroke-width="4" />
+                    <line x1="90" y1="10" x2="90" y2="140" stroke="blue" stroke-width="4" />
+                </svg>
+                <p class="parallel-text"><b>Sides = ∥</b></p>
+            </div>
+        </div>
+
+        <h3>Quick Quiz</h3>
+        <p>Which symbol describes the lines on a sheet of notebook paper?</p>
+        <button onclick="checkAnswer(true)">∥ (Parallel)</button>
+        <button onclick="checkAnswer(false)">⊥ (Perpendicular)</button>
+        <p id="feedback"></p>
+    </div>
+</div>
+
+<script>
+    // Tab Logic
+    function showTab(index) {
+        const sections = document.querySelectorAll('.content-section');
+        const tabs = document.querySelectorAll('.tab');
+        
+        sections.forEach(s => s.classList.remove('active'));
+        tabs.forEach(t => t.classList.remove('active'));
+        
+        sections[index].classList.add('active');
+        tabs[index].classList.add('active');
+        
+        if(index === 2) initCanvas();
+    }
+
+    // Drawing Logic
+    const canvas = document.getElementById('drawingCanvas');
+    const ctx = canvas.getContext('2d');
+    let drawing = false;
+    let mode = 'parallel';
+    let startX, startY;
+
+    function setMode(m) { mode = m; }
+
+    function initCanvas() {
+        ctx.lineCap = 'round';
+        ctx.lineWidth = 4;
+    }
+
+    canvas.addEventListener('mousedown', startPos);
+    canvas.addEventListener('mouseup', endPos);
+    canvas.addEventListener('mousemove', draw);
+
+    function startPos(e) {
+        drawing = true;
+        const rect = canvas.getBoundingClientRect();
+        startX = e.clientX - rect.left;
+        startY = e.clientY - rect.top;
+    }
+
+    function endPos() {
+        drawing = false;
+        ctx.beginPath();
+    }
+
+    function draw(e) {
+        if (!drawing) return;
+        const rect = canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        ctx.strokeStyle = (mode === 'parallel') ? '#3498db' : '#e74c3c';
+        
+        // Simple free draw for students to "trace" the grid
+        ctx.lineTo(x, y);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+    }
+
+    function clearCanvas() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function checkAnswer(isParallel) {
+        const f = document.getElementById('feedback');
+        if(isParallel) {
+            f.innerHTML = "✅ Correct! Notebook lines stay the same distance apart.";
+            f.style.color = "green";
+        } else {
+            f.innerHTML = "❌ Not quite. Notebook lines don't meet at 90 degrees, they never touch!";
+            f.style.color = "red";
+        }
+    }
+</script>
+
+</body>
+</html>
