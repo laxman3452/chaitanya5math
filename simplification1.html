@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 11: Introduction to Simplification & Order of Operations</title>
+    <style>
+        :root {
+            --primary: #2b6cb0;
+            --primary-light: #ebf8ff;
+            --secondary: #319795;
+            --accent: #dd6b20;
+            --bg: #f7fafc;
+            --text: #2d3748;
+            --white: #ffffff;
+            --rule-md: #e53e3e;
+            --rule-as: #3182ce;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Navigation */
+        nav {
+            width: 280px;
+            background-color: var(--primary);
+            color: var(--white);
+            padding: 2rem 1rem;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        nav h2 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #90cdf4;
+        }
+
+        nav p {
+            font-size: 0.85rem;
+            margin-bottom: 2rem;
+            opacity: 0.8;
+        }
+
+        nav ul {
+            list-style: none;
+        }
+
+        nav li {
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        nav li:hover, nav li.active {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateX(5px);
+        }
+
+        /* Main Content Area */
+        main {
+            margin-left: 280px;
+            flex-grow: 1;
+            padding: 3rem;
+            max-width: 1100px;
+        }
+
+        .lesson-section {
+            display: none;
+            background: var(--white);
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.4s ease;
+        }
+
+        .lesson-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Typography & UI Elements */
+        h1 { color: var(--primary); margin-bottom: 1.5rem; font-size: 2.2rem; border-bottom: 3px solid var(--primary-light); padding-bottom: 0.5rem;}
+        h3 { color: var(--secondary); margin: 1.5rem 0 1rem 0; font-size: 1.4rem;}
+        p { line-height: 1.6; margin-bottom: 1rem; font-size: 1.1rem; }
+        
+        .badge {
+            background: var(--accent);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        /* Visual Blocks */
+        .story-box {
+            background: #fffaf0;
+            border-left: 5px solid var(--accent);
+            padding: 1.5rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1.5rem 0;
+        }
+
+        .math-eq {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-align: center;
+            background: #edf2f7;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            letter-spacing: 2px;
+        }
+
+        /* Interactive Rule Graphic */
+        .rule-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        .rule-card {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        .rule-card.md { background-color: var(--rule-md); }
+        .rule-card.as { background-color: var(--rule-as); }
+        .rule-card .step { font-size: 2rem; margin-right: 1.5rem; background: rgba(0,0,0,0.15); width: 50px; height: 50px; display:flex; align-items:center; justify-content:center; border-radius:50%; }
+
+        /* Step-by-Step Interactive Display */
+        .interactive-example {
+            background: #f7fafc;
+            border: 2px dashed #cbd5e0;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+        }
+        .step-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .step-row:last-child { border: none; }
+        
+        /* Interactive Buttons & Inputs */
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        button:hover { background: #2b6cb0; }
+        button.secondary-btn { background: var(--secondary); }
+        
+        .interactive-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #cbd5e0;
+            border-radius: 6px;
+            font-size: 1rem;
+            margin-top: 0.5rem;
+        }
+        .interactive-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .feedback {
+            margin-top: 0.5rem;
+            font-weight: bold;
+            display: none;
+        }
+        .feedback.correct { color: #38a169; }
+        .feedback.incorrect { color: #e53e3e; }
+
+        /* Grid layouts */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        /* Printable / Display lists */
+        .task-list {
+            list-style-type: none;
+        }
+        .task-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #edf2f7;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Navigation -->
+    <nav>
+        <h2>Class 5 Maths</h2>
+        <p>Day 11: Simplification</p>
+        <ul>
+            <li class="nav-item active" onclick="switchSection('overview')">0. Lesson Overview</li>
+            <li class="nav-item" onclick="switchSection('warmup')">1. Warm-Up Story Math</li>
+            <li class="nav-item" onclick="switchSection('rule')">2. The Golden Rule</li>
+            <li class="nav-item" onclick="switchSection('guided')">3. Guided Examples</li>
+            <li class="nav-item" onclick="switchSection('group')">4. Group Activities</li>
+            <li class="nav-item" onclick="switchSection('practice')">5. Guided Practice</li>
+            <li class="nav-item" onclick="switchSection('exit')">6. Exit Ticket</li>
+            <li class="nav-item" onclick="switchSection('homework')">7. Homework</li>
+        </ul>
+    </nav>
+
+    <!-- Main Content Panels -->
+    <main>
+        
+        <!-- SECTION 0: OVERVIEW -->
+        <div id="overview" class="lesson-section active">
+            <span class="badge">TEACHER DASHBOARD</span>
+            <h1>Lesson Plan Overview</h1>
+            <p><strong>Duration:</strong> 80 Minutes | <strong>Subject:</strong> Mathematics</p>
+            <h3>Learning Objectives</h3>
+            <ul>
+                <li>Translate real-life situations into mathematical statements.</li>
+                <li>Recall the four basic arithmetic operations.</li>
+                <li>Understand that multiplication and division are solved before addition and subtraction.</li>
+                <li>Solve simple mixed-operation expressions correctly.</li>
+            </ul>
+            <h3>Required Materials</h3>
+            <p>Projector/Display, Whiteboard & colored markers, Practice Worksheets, Student Notebooks.</p>
+        </div>
+
+        <!-- SECTION 1: WARM-UP -->
+        <div id="warmup" class="lesson-section">
+            <span class="badge">PHASE 1: WARM-UP & MOTIVATION (15 MIN)</span>
+            <h1>Activity 1: Story Math</h1>
+            <p>Read the scenarios to the class. Have students write the mathematical expression in their notebooks, then reveal the answer blocks below to check.</p>
+            
+            <div class="story-box">
+                <h3>Scenario A</h3>
+                <p>"Your mother gave you 15 chocolates. Your father gave you 5 more. Then, you gave 7 chocolates to your sister. How many chocolates remain?"</p>
+                <button onclick="toggleDisplay('ansA')">Reveal Math Statement</button>
+                <div id="ansA" class="math-eq" style="display:none;">15 + 5 - 7 = 13</div>
+            </div>
+
+            <div class="story-box">
+                <h3>Scenario B</h3>
+                <p>"There are 20 birds on a tree. 15 more birds join them. Later, 13 birds fly away. How many birds are left?"</p>
+                <button onclick="toggleDisplay('ansB')">Reveal Math Statement</button>
+                <div id="ansB" class="math-eq" style="display:none;">20 + 15 - 13 = 22</div>
+            </div>
+
+            <h3>Discussion Corner</h3>
+            <blockquote>
+                <strong>Ask Students:</strong> 
+                <ul>
+                    <li>Which operation comes first?</li>
+                    <li>Does the order matter when <em>only</em> addition and subtraction are present?</li>
+                </ul>
+            </blockquote>
+            <div class="story-box" style="background-color: var(--primary-light); border-left-color: var(--primary);">
+                <strong>Teacher Note:</strong> For expressions containing only addition and subtraction, always solve sequentially from <strong>left to right</strong>.
+            </div>
+        </div>
+
+        <!-- SECTION 2: THE GOLDEN RULE -->
+        <div id="rule" class="lesson-section">
+            <span class="badge">PHASE 2: INTRODUCTION (20 MIN)</span>
+            <h1>Activity 2: Operation Detective</h1>
+            <p>Write the following problem on the physical board or project it here:</p>
+            <div class="math-eq" style="color: var(--accent);">10 × 7 - 37</div>
+            <p><strong>Ask the detectives:</strong> Which operation should be solved first? Why?</p>
+            
+            <hr style="margin: 2rem 0; border: 1px solid #e2e8f0;">
+            
+            <h2>The Golden Rule of Order</h2>
+            <div class="rule-container">
+                <div class="rule-card md">
+                    <div class="step">1</div>
+                    <div>Multiplication (×) and Division (÷) First</div>
+                </div>
+                <div class="rule-card as">
+                    <div class="step">2</div>
+                    <div>Addition (+) and Subtraction (-) Last</div>
+                </div>
+            </div>
+            <p style="text-align: center; font-weight: bold; color: var(--accent);">⚠️ Always move across the expression from Left to Right!</p>
+        </div>
+
+        <!-- SECTION 3: GUIDED EXAMPLES -->
+        <div id="guided" class="lesson-section">
+            <span class="badge">PHASE 2: GUIDED STEP-BY-STEP</span>
+            <h1>Guided Examples</h1>
+            <p>Walk through these problems with the class. Click each step to show the dynamic conversion of the expression.</p>
+
+            <!-- Example 1 -->
+            <div class="interactive-example">
+                <h3>Guided Example 1: 55 ÷ 11 + 5 × 2</h3>
+                <div class="step-row">
+                    <span><strong>Step 1:</strong> Solve Division (<span style="color:red">55 ÷ 11</span>)</span>
+                    <button class="secondary-btn" onclick="document.getElementById('ex1-s1').innerText = '5 + 5 × 2'">Show Result</button>
+                </div>
+                <div class="step-row">
+                    <span><strong>Step 2:</strong> Solve Multiplication (<span style="color:red">5 × 2</span>)</span>
+                    <button class="secondary-btn" onclick="document.getElementById('ex1-s2').innerText = '5 + 10'">Show Result</button>
+                </div>
+                <div class="step-row">
+                    <span><strong>Step 3:</strong> Solve Final Addition</span>
+                    <button class="secondary-btn" onclick="document.getElementById('ex1-s3').innerText = '15'">Show Final Answer</button>
+                </div>
+                <div class="math-eq" style="background:#fff;">
+                    <span id="ex1-s1">55 ÷ 11 + 5 × 2</span> &rarr; 
+                    <span id="ex1-s2">...</span> &rarr; 
+                    <span id="ex1-s3">...</span>
+                </div>
+            </div>
+
+            <!-- Example 2 -->
+            <div class="interactive-example">
+                <h3>Guided Example 2: 17 - 9 ÷ 3 × 2</h3>
+                <p><small>*Notice: Division and Multiplication are tied. Run them left to right!*</small></p>
+                <div class="step-row">
+                    <span><strong>Step 1:</strong> Division First (<span style="color:red">9 ÷ 3</span>)</span>
+                    <button class="secondary-btn" onclick="document.getElementById('ex2-s1').innerText = '17 - 3 × 2'">Show Result</button>
+                </div>
+                <div class="step-row">
+                    <span><strong>Step 2:</strong> Multiplication Next (<span style="color:red">3 × 2</span>)</span>
+                    <button class="secondary-btn" onclick="document.getElementById('ex2-s2').innerText = '17 - 6'">Show Result</button>
+                </div>
+                <div class="step-row">
+                    <span><strong>Step 3:</strong> Final Subtraction</span>
+                    <button class="secondary-btn" onclick="document.getElementById('ex2-s3').innerText = '11'">Show Final Answer</button>
+                </div>
+                <div class="math-eq" style="background:#fff;">
+                    <span id="ex2-s1">17 - 9 ÷ 3 × 2</span> &rarr; 
+                    <span id="ex2-s2">...</span> &rarr; 
+                    <span id="ex2-s3">...</span>
+                </div>
+            </div>
+            <button onclick="resetGuided()">Reset Examples</button>
+        </div>
+
+        <!-- SECTION 4: GROUP ACTIVITY -->
+        <div id="group" class="lesson-section">
+            <span class="badge">PHASE 3: GROUP ACTIVITY (20 MIN)</span>
+            <h1>Activity 3: Build a Story</h1>
+            <p>Divide students into groups. Challenge them to match expressions to real-life math situations or create their own.</p>
+            
+            <div class="grid-2">
+                <div class="story-box" style="border-left-color: var(--primary);">
+                    <h4>Group A Assignment</h4>
+                    <div class="math-eq">11 + 2 - 4</div>
+                    <p><strong>Sample Target Story:</strong> "Rabin had 11 pencils. His friend gave him 2 more pencils, but he lost 4 pencils."</p>
+                </div>
+                <div class="story-box" style="border-left-color: var(--secondary);">
+                    <h4>Group B Assignment</h4>
+                    <div class="math-eq">37 - 15 + 8</div>
+                    <p><strong>Sample Target Story:</strong> "A baker had 37 cupcakes. He sold 15 cupcakes and later baked 8 more."</p>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem;">Activity 4: Human Number Line</h3>
+            <p><strong>Setup:</strong> Hand out structural numeric cards and operation symbol tags to selected students. Have them line up at the front of the classroom and physically step forward out of the line when it is their operation's turn to execute!</p>
+        </div>
+
+        <!-- SECTION 5: GUIDED PRACTICE -->
+        <div id="practice" class="lesson-section">
+            <span class="badge">PHASE 4: GUIDED PRACTICE (15 MIN)</span>
+            <h1>Interactive Board Practice</h1>
+            <p>Call up students to solve these live, or have them write in their copies and check answers dynamically step-by-step.</p>
+
+            <ul class="task-list">
+                <li>
+                    <div><strong>1)</strong> 5 × 6 + 4</div>
+                    <div>
+                        <input type="number" id="p1" placeholder="Your Answer" style="padding: 0.3rem; width: 100px;">
+                        <button onclick="checkAnswer('p1', 34)">Check</button>
+                        <span id="p1-fb" class="feedback"></span>
+                    </div>
+                </li>
+                <li>
+                    <div><strong>2)</strong> 24 ÷ 6 + 7</div>
+                    <div>
+                        <input type="number" id="p2" placeholder="Your Answer" style="padding: 0.3rem; width: 100px;">
+                        <button onclick="checkAnswer('p2', 11)">Check</button>
+                        <span id="p2-fb" class="feedback"></span>
+                    </div>
+                </li>
+                <li>
+                    <div><strong>3)</strong> 18 - 3 × 2</div>
+                    <div>
+                        <input type="number" id="p3" placeholder="Your Answer" style="padding: 0.3rem; width: 100px;">
+                        <button onclick="checkAnswer('p3', 12)">Check</button>
+                        <span id="p3-fb" class="feedback"></span>
+                    </div>
+                </li>
+                <li>
+                    <div><strong>4)</strong> 40 ÷ 5 × 2</div>
+                    <div>
+                        <input type="number" id="p4" placeholder="Your Answer" style="padding: 0.3rem; width: 100px;">
+                        <button onclick="checkAnswer('p4', 16)">Check</button>
+                        <span id="p4-fb" class="feedback"></span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <!-- SECTION 6: EXIT TICKET -->
+        <div id="exit" class="lesson-section">
+            <span class="badge">PHASE 5: WRAP-UP & REFLECTION (10 MIN)</span>
+            <h1>Exit Ticket Verification</h1>
+            <p>Before students leave the class, evaluate their understanding individually using this panel.</p>
+            
+            <div class="interactive-example">
+                <h3>Question 1: Solve the expression</h3>
+                <div class="math-eq">12 + 4 × 2</div>
+                <input type="number" id="et1" class="interactive-input" placeholder="Type answer here...">
+                <button style="margin-top:0.5rem;" onclick="checkAnswer('et1', 20)">Submit Answer</button>
+                <div id="et1-fb" class="feedback"></div>
+            </div>
+
+            <div class="interactive-example">
+                <h3>Question 2: Conceptual Mastery</h3>
+                <p>Write the basic simplification order rule in just one sentence below:</p>
+                <textarea id="et2" class="interactive-input" rows="3" placeholder="E.g., Solve multiplication and division first from left to right, then addition and subtraction..."></textarea>
+                <button style="margin-top:0.5rem;" onclick="verifyText()">Submit Rule Text</button>
+                <div id="et2-fb" class="feedback"></div>
+            </div>
+        </div>
+
+        <!-- SECTION 7: HOMEWORK -->
+        <div id="homework" class="lesson-section">
+            <span class="badge">HOMEWORK ASSIGNMENT</span>
+            <h1>Homework Tasks (Day 11)</h1>
+            <p>Instruct students to copy the following problems into their home assignment notebooks:</p>
+            
+            <div class="story-box" style="background:#fff; border-left-color: var(--primary);">
+                <ol style="margin-left: 1.5rem; font-size: 1.2rem; line-height: 2;">
+                    <li><strong>8 × 5 - 10</strong></li>
+                    <li><strong>30 ÷ 5 + 7</strong></li>
+                    <li><strong>50 - 6 × 5</strong></li>
+                    <li><strong>Creative Writing Task:</strong> Create one unique, real-life word problem using addition and subtraction operations.</li>
+                </ol>
+            </div>
+            <button onclick="window.print()">Print This Lesson Sheet</button>
+        </div>
+
+    </main>
+
+    <!-- JavaScript Interactions Logic -->
+    <script>
+        // Tab switching controller
+        function switchSection(sectionId) {
+            // Hide all components
+            const sections = document.querySelectorAll('.lesson-section');
+            sections.forEach(sec => sec.classList.remove('active'));
+            
+            // Remove selection class state from nav
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => item.classList.remove('active'));
+
+            // Show active element
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Highlight relevant layout tab item
+            event.currentTarget.classList.add('active');
+        }
+
+        // Toggle simple text visibility
+        function toggleDisplay(elementId) {
+            const target = document.getElementById(elementId);
+            if (target.style.display === "none") {
+                target.style.display = "block";
+            } else {
+                target.style.display = "none";
+            }
+        }
+
+        // Reset dynamic board text back to formula state
+        function resetGuided() {
+            document.getElementById('ex1-s1').innerText = "55 ÷ 11 + 5 × 2";
+            document.getElementById('ex1-s2').innerText = "...";
+            document.getElementById('ex1-s3').innerText = "...";
+            
+            document.getElementById('ex2-s1').innerText = "17 - 9 ÷ 3 × 2";
+            document.getElementById('ex2-s2').innerText = "...";
+            document.getElementById('ex2-s3').innerText = "...";
+        }
+
+        // Check Answer processing
+        function checkAnswer(inputId, correctValue) {
+            const userInput = parseInt(document.getElementById(inputId).value);
+            const feedbackEl = document.getElementById(inputId + '-fb');
+            
+            feedbackEl.style.display = "inline-block";
+            
+            if (userInput === correctValue) {
+                feedbackEl.innerText = " ✓ Correct!";
+                feedbackEl.className = "feedback correct";
+            } else {
+                feedbackEl.innerText = " ✗ Try again!";
+                feedbackEl.className = "feedback incorrect";
+            }
+        }
+
+        // Interactive verification module for the text area rule assessment
+        function verifyText() {
+            const userText = document.getElementById('et2').value.toLowerCase();
+            const feedbackText = document.getElementById('et2-fb');
+            feedbackText.style.display = "block";
+
+            if (userText.includes('left') || userText.includes('first') || userText.includes('multiply') || userText.includes('divide')) {
+                feedbackText.innerText = "Excellent summary! Ensure you apply Multiplication/Division before Addition/Subtraction moving left to right.";
+                feedbackText.className = "feedback correct";
+            } else {
+                feedbackText.innerText = "Remember to reference which operations come first (× and ÷) vs last (+ and -).";
+                feedbackText.className = "feedback incorrect";
+            }
+        }
+    </script>
+</body>
+</html>
