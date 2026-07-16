@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class 5 Math: Distance & Measurements</title>
+    <style>
+        :root {
+            --primary: #4A90E2;
+            --primary-dark: #357ABD;
+            --secondary: #2ECC71;
+            --accent: #E67E22;
+            --bg: #F5F7FA;
+            --card-bg: #FFFFFF;
+            --text: #2C3E50;
+            --text-light: #7F8C8D;
+            --border: #E2E8F0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 8px;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* Navigation Tabs */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            background: #E2E8F0;
+            padding: 6px;
+            border-radius: 8px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            background: none;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-light);
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            background: var(--card-bg);
+            color: var(--primary);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        /* Content Sections */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            margin-bottom: 25px;
+            border: 1px solid var(--border);
+        }
+
+        h2 {
+            color: var(--primary-dark);
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+            border-bottom: 2px solid var(--bg);
+            padding-bottom: 8px;
+        }
+
+        /* Interactive Map Component */
+        .map-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            padding: 20px 10px;
+            background: #F8FAFC;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .unit-box {
+            background: var(--primary);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            text-align: center;
+            min-width: 90px;
+            box-shadow: 0 4px 6px rgba(74, 144, 226, 0.3);
+        }
+
+        .arrow-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            min-width: 80px;
+            margin: 10px 0;
+        }
+
+        .arrow-line {
+            height: 4px;
+            background: var(--text-light);
+            width: 80%;
+            position: relative;
+        }
+
+        .arrow-up-label {
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: var(--accent);
+            margin-bottom: 4px;
+        }
+
+        .arrow-down-label {
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: var(--secondary);
+            margin-top: 4px;
+        }
+
+        .rule-box {
+            background: #EDF2F7;
+            border-left: 5px solid var(--accent);
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            border-radius: 0 6px 6px 0;
+            font-weight: 500;
+        }
+
+        /* Live Tool Converter Form */
+        .converter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--text-light);
+        }
+
+        .input-group input, .input-group select {
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 1rem;
+            outline: none;
+            background-color: var(--bg);
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            border-color: var(--primary);
+            background-color: white;
+        }
+
+        .calc-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 22px;
+        }
+
+        .calc-btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .live-result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #E8F4FD;
+            border-radius: 6px;
+            border: 1px dashed var(--primary);
+            font-weight: 600;
+            text-align: center;
+        }
+
+        /* Examples Step UI */
+        .example-block {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background: #FAFBFD;
+        }
+
+        .example-header {
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-bottom: 10px;
+        }
+
+        .step-btn {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+
+        .step-details {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            background: white;
+            border-left: 3px solid var(--secondary);
+            font-size: 0.95rem;
+        }
+
+        /* Quiz UI */
+        .quiz-question {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .quiz-inputs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .quiz-unit-input {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .quiz-unit-input input {
+            width: 80px;
+            padding: 8px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .feedback {
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-weight: 600;
+            display: none;
+        }
+
+        .feedback.correct {
+            display: block;
+            background: #DEF7EC;
+            color: #03543F;
+        }
+
+        .feedback.wrong {
+            display: block;
+            background: #FDE8E8;
+            color: #9B1C1C;
+        }
+
+        .quiz-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .action-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .submit-btn { background: var(--secondary); color: white; }
+        .next-btn { background: var(--primary); color: white; }
+
+        .score-board {
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: var(--text);
+        }
+
+        /* Responsiveness */
+        @media(max-width: 600px) {
+            .map-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .arrow-container {
+                transform: rotate(90deg);
+                margin: 20px 0;
+            }
+            .arrow-up-label, .arrow-down-label {
+                transform: rotate(-90deg);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Distance & Length Explorer</h1>
+        <p>Class 5 Interactive Mathematics Companion</p>
+    </header>
+
+    <nav class="tabs">
+        <button class="tab-btn active" onclick="switchTab('learn')">Core Rules & Visuals</button>
+        <button class="tab-btn" onclick="switchTab('examples')">Guided Book Examples</button>
+        <button class="tab-btn" onclick="switchTab('quiz')">Interactive Practice Arena</button>
+    </nav>
+
+    <section id="learn" class="tab-content active">
+        <div class="card">
+            <h2>The Golden Rules of Unit Conversion</h2>
+            <div class="rule-box">
+                ⬆️ <strong>Larger Unit to Smaller Unit:</strong> Always <strong>MULTIPLY (×)</strong><br>
+                ⬇️ <strong>Smaller Unit to Larger Unit:</strong> Always <strong>DIVIDE (÷)</strong>
+            </div>
+
+            <div class="map-container">
+                <div class="unit-box">km</div>
+                <div class="arrow-container">
+                    <span class="arrow-up-label">× 1000</span>
+                    <div class="arrow-line"></div>
+                    <span class="arrow-down-label">÷ 1000</span>
+                </div>
+                <div class="unit-box">m</div>
+                <div class="arrow-container">
+                    <span class="arrow-up-label">× 100</span>
+                    <div class="arrow-line"></div>
+                    <span class="arrow-down-label">÷ 100</span>
+                </div>
+                <div class="unit-box">cm</div>
+                <div class="arrow-container">
+                    <span class="arrow-up-label">× 10</span>
+                    <div class="arrow-line"></div>
+                    <span class="arrow-down-label">÷ 10</span>
+                </div>
+                <div class="unit-box">mm</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Live Interactive Conversion Assistant</h2>
+            <div class="converter-grid">
+                <div class="input-group">
+                    <label for="conv-val">Enter Value:</label>
+                    <input type="number" id="conv-val" value="1" min="0">
+                </div>
+                <div class="input-group">
+                    <label for="conv-from">From:</label>
+                    <select id="conv-from">
+                        <option value="km">Kilometer (km)</option>
+                        <option value="m">Meter (m)</option>
+                        <option value="cm">Centimeter (cm)</option>
+                        <option value="mm">Millimeter (mm)</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="conv-to">To:</label>
+                    <select id="conv-to">
+                        <option value="km">Kilometer (km)</option>
+                        <option value="m" selected>Meter (m)</option>
+                        <option value="cm">Centimeter (cm)</option>
+                        <option value="mm">Millimeter (mm)</option>
+                    </select>
+                </div>
+                <button class="calc-btn" onclick="runConversion()">Convert Now</button>
+            </div>
+            <div class="live-result" id="conversion-output">
+                1 kilometer (km) = 1000 meter (m)
+            </div>
+        </div>
+    </section>
+
+    <section id="examples" class="tab-content">
+        <div class="card">
+            <h2>Step-by-Step Textbook Breakdowns</h2>
+            <p style="margin-bottom: 15px; color: var(--text-light)">Click "Show Dynamic Steps" to see how composite values are calculated logically without losing remainders.</p>
+
+            <div class="example-block">
+                <div class="example-header">Example 1 (Multiplication): Multiply (22 cm 7 mm) by 5</div>
+                <p><strong>Scenario:</strong> 5 ribbons of equal length are needed.</p>
+                <button class="step-btn" onclick="toggleSteps('ex1')">Show Dynamic Steps</button>
+                <div id="ex1" class="step-details">
+                    1. Multiply units individually:<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• 22 cm × 5 = 110 cm<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• 7 mm × 5 = 35 mm<br>
+                    2. Convert excess smaller units: 35 mm contains three full centimeters (30 mm = 3 cm) with 5 mm leftover.<br>
+                    3. Combine: 110 cm + 3 cm = 113 cm. Leftover = 5 mm.<br>
+                    <strong>Final Answer: 113 cm 5 mm (or 1 m 13 cm 5 mm)</strong>
+                </div>
+            </div>
+
+            <div class="example-block">
+                <div class="example-header">Example 2 (Division): Divide (58 cm 8 mm) by 3</div>
+                <p><strong>Scenario:</strong> Distributing a ribbon uniformly among 3 people.</p>
+                <button class="step-btn" onclick="toggleSteps('ex2')">Show Dynamic Steps</button>
+                <div id="ex2" class="step-details">
+                    1. Divide the centimeters first: 58 cm ÷ 3 = 19 cm with a remainder of 1 cm.<br>
+                    2. Convert the remaining unit: Convert the 1 cm remainder into millimeters → 1 cm = 10 mm.<br>
+                    3. Combine millimeters: 10 mm + 8 mm = 18 mm.<br>
+                    4. Divide the total millimeters: 18 mm ÷ 3 = 6 mm.<br>
+                    <strong>Final Answer: Each person gets 19 cm 6 mm</strong>
+                </div>
+            </div>
+
+            <div class="example-block">
+                <div class="example-header">Example 5: Multiply (3 km 145 m) by 7</div>
+                <button class="step-btn" onclick="toggleSteps('ex3')">Show Dynamic Steps</button>
+                <div id="ex3" class="step-details">
+                    1. Multiply components individually:<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• 3 km × 7 = 21 km<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• 145 m × 7 = 1015 m<br>
+                    2. Handle values larger than conversion thresholds: Since 1000 m = 1 km, extract 1 km from 1015 m. Remaining meters = 15 m.<br>
+                    3. Add extracted kilometer up: 21 km + 1 km = 22 km.<br>
+                    <strong>Final Answer: 22 km 15 m</strong>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="quiz" class="tab-content">
+        <div class="card">
+            <h2>Interactive Practice Arena</h2>
+            <div class="score-board">
+                Question <span id="q-num">1</span> of 5 | Score: <span id="score-val">0</span>/5
+            </div>
+
+            <div class="example-block" style="background: white;">
+                <div class="quiz-question" id="quiz-question-text">Loading question...</div>
+                
+                <div class="quiz-inputs" id="quiz-inputs-container">
+                    </div>
+
+                <div class="feedback" id="quiz-feedback"></div>
+
+                <div class="quiz-actions">
+                    <button class="action-btn submit-btn" id="btn-submit" onclick="checkQuizAnswer()">Verify Answer</button>
+                    <button class="action-btn next-btn" id="btn-next" onclick="nextQuizQuestion()" style="display:none;">Next Question ➔</button>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+    // System Tabs Controller
+    function switchTab(tabId) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        
+        document.getElementById(tabId).classList.add('active');
+        event.currentTarget.classList.add('active');
+    }
+
+    // Step Explainer Toggle
+    function toggleSteps(id) {
+        const el = document.getElementById(id);
+        const button = event.target;
+        if (el.style.display === "block") {
+            el.style.display = "none";
+            button.innerText = "Show Dynamic Steps";
+        } else {
+            el.style.display = "block";
+            button.innerText = "Hide Steps";
+        }
+    }
+
+    // Mathematical Engine Conversion logic
+    const unitMap = { mm: 1, cm: 10, m: 1000, km: 1000000 };
+
+    function runConversion() {
+        const val = parseFloat(document.getElementById('conv-val').value);
+        const from = document.getElementById('conv-from').value;
+        const to = document.getElementById('conv-to').value;
+        const outBox = document.getElementById('conversion-output');
+
+        if(isNaN(val) || val < 0) {
+            outBox.innerText = "Please input a valid positive number.";
+            return;
+        }
+
+        // Convert to absolute scale base (mm)
+        const baseValue = val * unitMap[from];
+        // Convert down to target unit scale
+        const targetValue = baseValue / unitMap[to];
+
+        // Clean trailing float inaccuracies
+        const cleanTarget = parseFloat(targetValue.toFixed(4));
+        
+        outBox.innerHTML = `<strong>${val} ${from}</strong> = <strong>${cleanTarget} ${to}</strong>`;
+    }
+
+    // Quiz Database Strategy
+    const quizDatabase = [
+        {
+            type: "convert",
+            question: "Convert 3 cm and 7 mm completely into mm.",
+            inputs: [{label: "mm", key: "mm"}],
+            answers: {mm: 37}
+        },
+        {
+            type: "convert",
+            question: "Convert 2700 cm completely into meters (m).",
+            inputs: [{label: "m", key: "m"}],
+            answers: {m: 27}
+        },
+        {
+            type: "multiply",
+            question: "Multiply 5 cm 7 mm by 6. What is the standard combined result?",
+            inputs: [{label: "cm", key: "cm"}, {label: "mm", key: "mm"}],
+            answers: {cm: 34, mm: 2}
+        },
+        {
+            type: "divide",
+            question: "Divide 16 cm 5 mm by 5. Find the final uniform quotient.",
+            inputs: [{label: "cm", key: "cm"}, {label: "mm", key: "mm"}],
+            answers: {cm: 3, mm: 3}
+        },
+        {
+            type: "word",
+            question: "Abdul walks 1 km 500 m every single morning. What is the total distance he covers in exactly 1 week (7 days)?",
+            inputs: [{label: "km", key: "km"}, {label: "m", key: "m"}],
+            answers: {km: 10, m: 500}
+        }
+    ];
+
+    let currentQuestionIdx = 0;
+    let score = 0;
+
+    function renderQuizQuestion() {
+        const currentQ = quizDatabase[currentQuestionIdx];
+        document.getElementById('q-num').innerText = currentQuestionIdx + 1;
+        document.getElementById('quiz-question-text').innerText = currentQ.question;
+        
+        const inputsContainer = document.getElementById('quiz-inputs-container');
+        inputsContainer.innerHTML = '';
+        
+        currentQ.inputs.forEach(inputDef => {
+            inputsContainer.innerHTML += `
+                <div class="quiz-unit-input">
+                    <input type="number" id="quiz-ans-${inputDef.key}" placeholder="0">
+                    <label><strong>${inputDef.label}</strong></label>
+                </div>
+            `;
+        });
+
+        document.getElementById('quiz-feedback').className = 'feedback';
+        document.getElementById('quiz-feedback').style.display = 'none';
+        document.getElementById('btn-submit').style.display = 'block';
+        document.getElementById('btn-next').style.display = 'none';
+    }
+
+    function checkQuizAnswer() {
+        const currentQ = quizDatabase[currentQuestionIdx];
+        let allCorrect = true;
+        
+        for (let inputDef of currentQ.inputs) {
+            const userVal = parseInt(document.getElementById(`quiz-ans-${inputDef.key}`).value);
+            if(userVal !== currentQ.answers[inputDef.key]) {
+                allCorrect = false;
+                break;
+            }
+        }
+
+        const feedback = document.getElementById('quiz-feedback');
+        if (allCorrect) {
+            feedback.innerText = "Excellent Work! That is exactly correct.";
+            feedback.className = "feedback correct";
+            score++;
+            document.getElementById('score-val').innerText = score;
+        } else {
+            let correctString = Object.entries(currentQ.answers).map(([k,v]) => `${v} ${k}`).join(' ');
+            feedback.innerText = `Incorrect. The correct answer was: ${correctString}.`;
+            feedback.className = "feedback wrong";
+        }
+
+        document.getElementById('btn-submit').style.display = 'none';
+        document.getElementById('btn-next').style.display = 'block';
+    }
+
+    function nextQuizQuestion() {
+        currentQuestionIdx++;
+        if(currentQuestionIdx < quizDatabase.length) {
+            renderQuizQuestion();
+        } else {
+            // End of Quiz loop state
+            document.getElementById('quiz-question-text').innerText = `Quiz Complete! You scored ${score} out of ${quizDatabase.length}.`;
+            document.getElementById('quiz-inputs-container').innerHTML = '';
+            document.getElementById('quiz-feedback').style.display = 'none';
+            document.getElementById('btn-next').style.display = 'none';
+            document.getElementById('btn-submit').innerHTML = "Restart Quiz";
+            document.getElementById('btn-submit').style.display = 'block';
+            document.getElementById('btn-submit').onclick = resetQuiz;
+        }
+    }
+
+    function resetQuiz() {
+        currentQuestionIdx = 0;
+        score = 0;
+        document.getElementById('score-val').innerText = score;
+        document.getElementById('btn-submit').innerHTML = "Verify Answer";
+        document.getElementById('btn-submit').onclick = checkQuizAnswer;
+        renderQuizQuestion();
+    }
+
+    // Initialize application execution states
+    window.onload = function() {
+        renderQuizQuestion();
+    };
+</script>
+
+</body>
+</html>
