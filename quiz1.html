@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Class 5 Mathematics Quiz</title>
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --correct: #10b981;
+      --correct-bg: #ecfdf5;
+      --incorrect: #ef4444;
+      --incorrect-bg: #fef2f2;
+      --border: #e2e8f0;
+      --radius: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .quiz-container {
+      background: var(--card-bg);
+      width: 100%;
+      max-width: 680px;
+      border-radius: var(--radius);
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05), 0 8px 10px -6px rgba(0,0,0,0.05);
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .header {
+      background: var(--primary);
+      color: white;
+      padding: 24px;
+      text-align: center;
+    }
+
+    .header h1 {
+      font-size: 1.5rem;
+      margin-bottom: 6px;
+    }
+
+    .header p {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    .quiz-body {
+      padding: 24px;
+    }
+
+    /* Start Screen */
+    .start-screen {
+      text-align: center;
+      padding: 20px 10px;
+    }
+
+    .start-screen h2 {
+      margin-bottom: 12px;
+      font-size: 1.3rem;
+    }
+
+    .start-screen p {
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+
+    .badge {
+      display: inline-block;
+      background: #e0e7ff;
+      color: var(--primary);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+      width: 100%;
+    }
+
+    .btn:hover {
+      background: var(--primary-hover);
+    }
+
+    .btn:disabled {
+      background: #cbd5e1;
+      cursor: not-allowed;
+    }
+
+    /* Question Screen */
+    .progress-bar-container {
+      height: 8px;
+      background: #e2e8f0;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: var(--primary);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .meta-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .question-category {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .question-number {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .question-text {
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+      line-height: 1.4;
+    }
+
+    .options-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .option-btn {
+      background: #f8fafc;
+      border: 2px solid var(--border);
+      padding: 14px 16px;
+      border-radius: 8px;
+      text-align: left;
+      font-size: 1rem;
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      border-color: var(--primary);
+      background: #f1f5f9;
+    }
+
+    .option-btn.selected {
+      border-color: var(--primary);
+      background: #e0e7ff;
+    }
+
+    .option-btn.correct {
+      border-color: var(--correct);
+      background: var(--correct-bg);
+      color: #065f46;
+      font-weight: 600;
+    }
+
+    .option-btn.incorrect {
+      border-color: var(--incorrect);
+      background: var(--incorrect-bg);
+      color: #991b1b;
+      font-weight: 600;
+    }
+
+    .explanation-box {
+      background: #f1f5f9;
+      border-left: 4px solid var(--primary);
+      padding: 14px 16px;
+      border-radius: 0 8px 8px 0;
+      margin-bottom: 20px;
+      font-size: 0.9rem;
+      color: #334155;
+      display: none;
+    }
+
+    .explanation-box strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--text);
+    }
+
+    /* Results Screen */
+    .results-screen {
+      text-align: center;
+    }
+
+    .score-circle {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: #e0e7ff;
+      color: var(--primary);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin: 20px auto;
+      border: 4px solid var(--primary);
+    }
+
+    .score-circle .number {
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    .score-circle .label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .review-list {
+      margin-top: 24px;
+      text-align: left;
+      max-height: 300px;
+      overflow-y: auto;
+      border-top: 1px solid var(--border);
+      padding-top: 16px;
+    }
+
+    .review-item {
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .review-item .q-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 4px;
+    }
+
+    .review-item .ans-status {
+      font-size: 0.85rem;
+    }
+
+    .ans-correct { color: var(--correct); }
+    .ans-incorrect { color: var(--incorrect); }
+
+    .hide { display: none !important; }
+  </style>
+</head>
+<body>
+
+  <div class="quiz-container">
+    <div class="header">
+      <h1>Class 5 Mathematics Quiz</h1>
+      <p>Curriculum Syllabus Assessment</p>
+    </div>
+
+    <div class="quiz-body">
+      <!-- Start Screen -->
+      <div id="start-screen" class="start-screen">
+        <span class="badge">15 Questions</span>
+        <h2>Test Your Math Skills</h2>
+        <p>Covers Geometry, Arithmetic, Fractions, and Distance conversion topics. Select the best answer for each question.</p>
+        <button class="btn" onclick="startQuiz()">Start Quiz</button>
+      </div>
+
+      <!-- Question Screen -->
+      <div id="question-screen" class="hide">
+        <div class="progress-bar-container">
+          <div id="progress-bar" class="progress-bar"></div>
+        </div>
+
+        <div class="meta-info">
+          <span id="question-category" class="question-category">Category</span>
+          <span id="question-number" class="question-number">1 / 15</span>
+        </div>
+
+        <div id="question-text" class="question-text">Question text goes here?</div>
+
+        <div id="options-grid" class="options-grid"></div>
+
+        <div id="explanation-box" class="explanation-box">
+          <strong>Explanation:</strong>
+          <span id="explanation-text"></span>
+        </div>
+
+        <button id="next-btn" class="btn" onclick="nextQuestion()" disabled>Next Question</button>
+      </div>
+
+      <!-- Results Screen -->
+      <div id="results-screen" class="results-screen hide">
+        <h2>Quiz Completed!</h2>
+        <div class="score-circle">
+          <span id="final-score" class="number">0/15</span>
+          <span class="label">Score</span>
+        </div>
+        <p id="performance-msg">Great effort!</p>
+
+        <div id="review-list" class="review-list"></div>
+
+        <button class="btn" style="margin-top: 20px;" onclick="resetQuiz()">Retake Quiz</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        id: 1,
+        category: "Geometry: Line & Angles",
+        question: "1. What type of angle measures exactly 90 degrees (90°)?",
+        options: ["Acute angle", "Right angle", "Obtuse angle", "Straight angle"],
+        correct: 1,
+        explanation: "A right angle measures exactly 90 degrees."
+      },
+      {
+        id: 2,
+        category: "Geometry: Triangle Angles",
+        question: "2. Two interior angles of a triangle measure 50° and 60°. What is the measure of the third angle?",
+        options: ["50°", "60°", "70°", "80°"],
+        correct: 2,
+        explanation: "The sum of angles in a triangle is 180°. Third angle = 180° - (50° + 60°) = 70°."
+      },
+      {
+        id: 3,
+        category: "Geometry: Solid Objects",
+        question: "3. How many faces, vertices, and edges does a standard cuboid (rectangular box) have?",
+        options: [
+          "6 faces, 8 vertices, 12 edges",
+          "6 faces, 12 vertices, 8 edges",
+          "8 faces, 6 vertices, 12 edges",
+          "5 faces, 6 vertices, 9 edges"
+        ],
+        correct: 0,
+        explanation: "A cuboid has 6 faces, 8 corner vertices, and 12 straight edges."
+      },
+      {
+        id: 4,
+        category: "Arithmetic: Number Sense",
+        question: "4. In the International Number System, how is the number 12345678 correctly written using commas?",
+        options: ["1,23,45,678", "12,345,678", "123,456,78", "1,234,56,78"],
+        correct: 1,
+        explanation: "In the International System, commas are placed after every 3 digits from the right: 12,345,678."
+      },
+      {
+        id: 5,
+        category: "Arithmetic: Rounding Off",
+        question: "5. What is the value when 45,678 is rounded off to the nearest thousand?",
+        options: ["45,000", "45,600", "45,700", "46,000"],
+        correct: 3,
+        explanation: "The hundreds digit is 6 (≥ 5), so 45,678 rounds up to 46,000."
+      },
+      {
+        id: 6,
+        category: "Arithmetic: Prime & Composite",
+        question: "6. Which of the following numbers up to 100 is a prime number?",
+        options: ["21", "27", "29", "35"],
+        correct: 2,
+        explanation: "29 is prime (divisible only by 1 and itself). 21, 27, and 35 are composite."
+      },
+      {
+        id: 7,
+        category: "Arithmetic: National System",
+        question: "7. What is the place value of digit 7 in the national number 7,25,432?",
+        options: ["Seven Thousand", "Seventy Thousand", "Seven Lakh", "Seven Crore"],
+        correct: 2,
+        explanation: "In the National (Indian) place value chart, 7 is in the Lakhs place: Seven Lakh (7,00,000)."
+      },
+      {
+        id: 8,
+        category: "Arithmetic: Simplification",
+        question: "8. Simplify the numerical expression: 25 - 4 × 3 + 8",
+        options: ["71", "21", "15", "41"],
+        correct: 1,
+        explanation: "Using BODMAS: Multiply first (4 × 3 = 12), then calculate 25 - 12 + 8 = 21."
+      },
+      {
+        id: 9,
+        category: "Arithmetic: Basic Operations",
+        question: "9. A shopkeeper bought 12 notebooks for Rs 360 and sold each notebook for Rs 40. What is his total profit?",
+        options: ["Rs 120", "Rs 80", "Rs 480", "Rs 60"],
+        correct: 0,
+        explanation: "Total Selling Price = 12 × 40 = Rs 480. Profit = Rs 480 - Rs 360 = Rs 120."
+      },
+      {
+        id: 10,
+        category: "Fractions: Mixed Conversion",
+        question: "10. Convert the mixed number 3 2/5 into an improper fraction.",
+        options: ["11/5", "17/5", "15/5", "10/5"],
+        correct: 1,
+        explanation: "Improper fraction = (3 × 5 + 2) / 5 = 17/5."
+      },
+      {
+        id: 11,
+        category: "Fractions: Addition",
+        question: "11. Calculate the sum of three fractions with same denominator: 2/9 + 4/9 + 1/9",
+        options: ["7/27", "7/9", "6/9", "8/9"],
+        correct: 1,
+        explanation: "Add numerators over common denominator: (2 + 4 + 1) / 9 = 7/9."
+      },
+      {
+        id: 12,
+        category: "Fractions: Subtraction",
+        question: "12. Simplify the subtraction of fractions: 11/15 - 4/15",
+        options: ["7/15", "7/30", "15/15", "3/15"],
+        correct: 0,
+        explanation: "Subtract numerators over common denominator: (11 - 4) / 15 = 7/15."
+      },
+      {
+        id: 13,
+        category: "Distance: Unit Conversion",
+        question: "13. How many millimeters (mm) are equivalent to 8 centimeters (cm)?",
+        options: ["8 mm", "80 mm", "800 mm", "8000 mm"],
+        correct: 1,
+        explanation: "1 cm = 10 mm, so 8 cm = 8 × 10 = 80 mm."
+      },
+      {
+        id: 14,
+        category: "Distance: Multiplication",
+        question: "14. If a wire is 2 m 40 cm long, what is the total length of 5 such wires in meters?",
+        options: ["10 m", "11 m", "12 m", "14 m"],
+        correct: 2,
+        explanation: "2 m 40 cm = 2.4 m. Total length = 2.4 m × 5 = 12 m."
+      },
+      {
+        id: 15,
+        category: "Distance: Division",
+        question: "15. A long rope of length 15 km is divided equally into 5 pieces. What is the length of each piece in km?",
+        options: ["2 km", "3 km", "4 km", "5 km"],
+        correct: 1,
+        explanation: "15 km ÷ 5 = 3 km per piece."
+      }
+    ];
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let userAnswers = [];
+
+    const startScreen = document.getElementById("start-screen");
+    const questionScreen = document.getElementById("question-screen");
+    const resultsScreen = document.getElementById("results-screen");
+
+    const progressBar = document.getElementById("progress-bar");
+    const categoryText = document.getElementById("question-category");
+    const numberText = document.getElementById("question-number");
+    const questionText = document.getElementById("question-text");
+    const optionsGrid = document.getElementById("options-grid");
+    const explanationBox = document.getElementById("explanation-box");
+    const explanationText = document.getElementById("explanation-text");
+    const nextBtn = document.getElementById("next-btn");
+
+    function startQuiz() {
+      currentQuestionIndex = 0;
+      score = 0;
+      userAnswers = [];
+      startScreen.classList.add("hide");
+      resultsScreen.classList.add("hide");
+      questionScreen.classList.remove("hide");
+      showQuestion();
+    }
+
+    function showQuestion() {
+      const q = questions[currentQuestionIndex];
+      categoryText.innerText = q.category;
+      numberText.innerText = `${currentQuestionIndex + 1} / ${questions.length}`;
+      questionText.innerText = q.question;
+      progressBar.style.width = `${((currentQuestionIndex) / questions.length) * 100}%`;
+
+      explanationBox.style.display = "none";
+      nextBtn.disabled = true;
+      nextBtn.innerText = currentQuestionIndex === questions.length - 1 ? "Finish Quiz" : "Next Question";
+
+      optionsGrid.innerHTML = "";
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement("button");
+        btn.className = "option-btn";
+        btn.innerText = `${String.fromCharCode(65 + idx)}) ${opt}`;
+        btn.onclick = () => selectOption(idx);
+        optionsGrid.appendChild(btn);
+      });
+    }
+
+    function selectOption(selectedIndex) {
+      const q = questions[currentQuestionIndex];
+      const buttons = optionsGrid.children;
+
+      userAnswers[currentQuestionIndex] = selectedIndex;
+
+      for (let i = 0; i < buttons.length; i++) {
+        buttons[i].disabled = true;
+        if (i === q.correct) {
+          buttons[i].classList.add("correct");
+        } else if (i === selectedIndex) {
+          buttons[i].classList.add("incorrect");
+        }
+      }
+
+      if (selectedIndex === q.correct) {
+        score++;
+      }
+
+      explanationText.innerText = q.explanation;
+      explanationBox.style.display = "block";
+      nextBtn.disabled = false;
+    }
+
+    function nextQuestion() {
+      currentQuestionIndex++;
+      if (currentQuestionIndex < questions.length) {
+        showQuestion();
+      } else {
+        showResults();
+      }
+    }
+
+    function showResults() {
+      questionScreen.classList.add("hide");
+      resultsScreen.classList.remove("hide");
+
+      document.getElementById("final-score").innerText = `${score}/${questions.length}`;
+      const percentage = (score / questions.length) * 100;
+
+      let msg = "";
+      if (percentage >= 80) msg = "🌟 Outstanding! Excellent understanding of Class 5 Math concepts!";
+      else if (percentage >= 60) msg = "👍 Good job! Keep practicing to improve even further.";
+      else msg = "📚 Keep practicing! Review the explanations below to strengthen your fundamentals.";
+
+      document.getElementById("performance-msg").innerText = msg;
+
+      const reviewList = document.getElementById("review-list");
+      reviewList.innerHTML = "<h3>Question Breakdown</h3>";
+
+      questions.forEach((q, idx) => {
+        const uAns = userAnswers[idx];
+        const isCorrect = uAns === q.correct;
+        const item = document.createElement("div");
+        item.className = "review-item";
+        item.innerHTML = `
+          <div class="q-title">${q.question}</div>
+          <div class="ans-status ${isCorrect ? 'ans-correct' : 'ans-incorrect'}">
+            ${isCorrect ? '✓ Correct' : '✗ Incorrect'} - Your answer: ${uAns !== undefined ? q.options[uAns] : 'Skipped'}
+            ${!isCorrect ? `| Correct answer: <strong>${q.options[q.correct]}</strong>` : ''}
+          </div>
+        `;
+        reviewList.appendChild(item);
+      });
+    }
+
+    function resetQuiz() {
+      startQuiz();
+    }
+  </script>
+</body>
+</html>
