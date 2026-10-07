@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Capacity Champions - Class 5 Mathematics</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f3f7ff;color:#17233c;overflow:hidden}
+.app{height:100vh;display:flex;flex-direction:column}
+.top{height:64px;background:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 24px;border-bottom:2px solid #e7ecf5;z-index:5}
+.brand{font-size:20px;font-weight:800}.brand span{font-size:26px}
+.progress{height:7px;background:#e8edf5;position:absolute;top:64px;left:0;right:0}.bar{height:100%;width:0;background:#4f7cff;transition:.3s}
+.score{background:#eef3ff;padding:9px 16px;border-radius:20px;font-weight:800;color:#365bd6}
+main{flex:1;position:relative;overflow:hidden}
+.slide{position:absolute;inset:0;padding:42px 7vw 85px;display:none;overflow:auto;animation:fade .3s ease}
+.slide.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:none}}
+h1{font-size:clamp(38px,5vw,68px);margin:10px 0 18px;line-height:1.05}
+h2{font-size:clamp(30px,4vw,48px);margin:8px 0 18px}
+h3{font-size:24px;margin:8px 0 12px}
+p,li{font-size:20px;line-height:1.5}
+.subtitle{font-size:24px;color:#5d6b84}
+.hero{min-height:75vh;display:grid;place-items:center;text-align:center}
+.hero-card{max-width:900px}
+.emoji{font-size:76px}
+.tag{display:inline-block;background:#e8f0ff;color:#315bd5;border-radius:30px;padding:9px 17px;font-weight:800;margin:8px}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-top:25px}
+.card{background:white;border:2px solid #e5eaf4;border-radius:20px;padding:22px;box-shadow:0 8px 24px #1e3a5f12}
+.big-rule{font-size:clamp(38px,6vw,72px);font-weight:900;text-align:center;background:white;border-radius:28px;padding:35px;margin:25px auto;max-width:800px;box-shadow:0 12px 35px #1e3a5f14}
+.rule-row{display:flex;justify-content:center;gap:25px;flex-wrap:wrap}
+.rule{padding:18px 25px;border-radius:18px;background:#edf3ff;font-size:24px;font-weight:800}
+.question{background:white;border-radius:22px;padding:25px;margin:18px 0;border:2px solid #e5eaf4}
+.answers{display:flex;flex-wrap:wrap;gap:12px;margin-top:15px}
+button{border:0;border-radius:14px;padding:13px 20px;font-size:18px;font-weight:700;cursor:pointer;background:#edf1f8;color:#17233c;transition:.15s}
+button:hover{transform:translateY(-2px);filter:brightness(.98)}
+button.primary{background:#4f7cff;color:white}
+button.good{background:#22a06b;color:white}
+button.bad{background:#e55353;color:white}
+.feedback{min-height:28px;font-weight:800;margin-top:12px}
+.reveal{display:none;margin-top:12px;padding:15px;border-radius:14px;background:#eaf8f1;color:#176b49;font-weight:800}
+.reveal.show{display:block}
+.timer{font-size:52px;font-weight:900;text-align:center;margin:12px}
+.team{display:flex;gap:18px;flex-wrap:wrap}
+.team-box{flex:1;min-width:220px;background:white;border-radius:20px;padding:20px;text-align:center;border:2px solid #e5eaf4}
+.team-score{font-size:48px;font-weight:900}
+.board{background:#17233c;color:white;border-radius:22px;padding:28px;text-align:center;margin:18px auto;max-width:850px}
+.board .equation{font-size:42px;font-weight:900}
+.input-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+input{font-size:20px;padding:12px 15px;border:2px solid #cfd7e5;border-radius:12px;width:180px;text-align:center}
+.nav{height:70px;background:white;border-top:2px solid #e7ecf5;display:flex;align-items:center;justify-content:center;gap:12px;z-index:5}
+.nav button{min-width:110px}.counter{font-weight:800;color:#68758b}
+.object{font-size:55px;text-align:center;padding:12px}
+.note{background:#fff7db;border-left:6px solid #f3bb32;padding:15px 20px;border-radius:12px;margin:18px 0}
+.success{color:#16865a}.danger{color:#c63838}
+@media(max-width:700px){.slide{padding:28px 5vw 80px}p,li{font-size:17px}.nav button{min-width:auto;padding:10px 14px}.top{padding:0 12px}.brand{font-size:15px}.score{padding:7px 10px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top">
+  <div class="brand">🥤 Capacity Champions · Class 5</div>
+  <div class="score">⭐ Score: <span id="score">0</span></div>
+</header>
+<div class="progress"><div class="bar" id="bar"></div></div>
+
+<main>
+<section class="slide active">
+  <div class="hero">
+    <div class="hero-card">
+      <div class="emoji">🥤💧🧃</div>
+      <span class="tag">CLASS 5 MATHEMATICS</span>
+      <h1>Capacity Champions!</h1>
+      <p class="subtitle">Multiplication & Division of Liters (L) and Milliliters (mL)</p>
+      <button class="primary" onclick="nextSlide()">🚀 Start the Lesson</button>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <h2>🎯 Today's Mission</h2>
+  <div class="card-grid">
+    <div class="card">📏 <h3>Remember</h3><p><b>1 L = 1000 mL</b></p></div>
+    <div class="card">✖️ <h3>Multiply</h3><p>Find the total capacity of several containers.</p></div>
+    <div class="card">➗ <h3>Divide</h3><p>Share a quantity equally.</p></div>
+    <div class="card">🧠 <h3>Think</h3><p>Convert units when needed.</p></div>
+  </div>
+  <div class="note">🏆 Goal: Solve real-life capacity problems like a Capacity Champion!</div>
+</section>
+
+<section class="slide">
+  <h2>🥤 Warm-up: Which Holds More?</h2>
+  <p>Look at these objects. Click the one that can hold the <b>most</b> water.</p>
+  <div class="card-grid">
+    <div class="card" onclick="chooseWarm(this,false)"><div class="object">🥄</div><h3>Spoon</h3></div>
+    <div class="card" onclick="chooseWarm(this,false)"><div class="object">🥛</div><h3>Glass</h3></div>
+    <div class="card" onclick="chooseWarm(this,true)"><div class="object">🪣</div><h3>Bucket</h3></div>
+    <div class="card" onclick="chooseWarm(this,false)"><div class="object">🍼</div><h3>Bottle</h3></div>
+  </div>
+  <div id="warmFeedback" class="feedback"></div>
+  <div class="note">💬 Ask: Would we normally measure a bucket in <b>mL</b> or <b>L</b>?</div>
+</section>
+
+<section class="slide">
+  <h2>🔍 Discover the Big Rule</h2>
+  <div class="big-rule">1 L = 1000 mL</div>
+  <div class="rule-row">
+    <div class="rule">L → mL = × 1000</div>
+    <div class="rule">mL → L = ÷ 1000</div>
+  </div>
+  <div class="question">
+    <h3>Quick Challenge</h3>
+    <p>3 L = ? mL</p>
+    <div class="answers">
+      <button onclick="answer(this,true,'rule1')">3000 mL</button>
+      <button onclick="answer(this,false,'rule1')">300 mL</button>
+      <button onclick="answer(this,false,'rule1')">30 mL</button>
+    </div>
+    <div id="rule1" class="feedback"></div>
+  </div>
+  <div class="question">
+    <p>5000 mL = ? L</p>
+    <div class="answers">
+      <button onclick="answer(this,false,'rule2')">50 L</button>
+      <button onclick="answer(this,true,'rule2')">5 L</button>
+      <button onclick="answer(this,false,'rule2')">500 L</button>
+    </div>
+    <div id="rule2" class="feedback"></div>
+  </div>
+</section>
+
+<section class="slide">
+  <h2>🧃 Juice Factory</h2>
+  <p>You are now running a juice factory! Work in teams and solve these.</p>
+  <div class="question">
+    <h3>Level 1 — Bottle Factory</h3>
+    <p>One bottle contains <b>2 L</b>. There are <b>3 bottles</b>. How much juice altogether?</p>
+    <div class="answers">
+      <button onclick="answer(this,true,'j1')">6 L</button>
+      <button onclick="answer(this,false,'j1')">5 L</button>
+      <button onclick="answer(this,false,'j1')">9 L</button>
+    </div>
+    <div id="j1" class="feedback"></div>
+  </div>
+  <div class="question">
+    <h3>Level 2 — Glass Factory</h3>
+    <p>One glass contains <b>250 mL</b>. How much is <b>4 glasses</b>?</p>
+    <button class="primary" onclick="reveal('j2')">💡 Show Calculation</button>
+    <div id="j2" class="reveal">250 × 4 = 1000 mL = <b>1 L</b> 🎉</div>
+  </div>
+</section>
+
+<section class="slide">
+  <h2>🕵️ Capacity Detective</h2>
+  <p>Read the situation. Decide: <b>MULTIPLY or DIVIDE?</b></p>
+  <div class="question">
+    <p>🍶 A bottle contains 2 L. There are 5 bottles. How much altogether?</p>
+    <div class="answers">
+      <button onclick="detective(this,true,'d1','MULTIPLY! 2 × 5 = 10 L')">✖️ MULTIPLY</button>
+      <button onclick="detective(this,false,'d1','Try again! We are finding a total.')">➗ DIVIDE</button>
+    </div><div id="d1" class="feedback"></div>
+  </div>
+  <div class="question">
+    <p>🧃 There are 6 L of juice. It is poured equally into 3 bottles. How much in each?</p>
+    <div class="answers">
+      <button onclick="detective(this,false,'d2','Try again! We are sharing equally.')">✖️ MULTIPLY</button>
+      <button onclick="detective(this,true,'d2','DIVIDE! 6 ÷ 3 = 2 L')">➗ DIVIDE</button>
+    </div><div id="d2" class="feedback"></div>
+  </div>
+  <div class="question">
+    <p>💧 4000 mL is equally divided into 4 containers. How much in each?</p>
+    <div class="answers">
+      <button onclick="detective(this,true,'d3','DIVIDE! 4000 ÷ 4 = 1000 mL = 1 L')">➗ DIVIDE</button>
+      <button onclick="detective(this,false,'d3','Try again! The water is being shared equally.')">✖️ MULTIPLY</button>
+    </div><div id="d3" class="feedback"></div>
+  </div>
+</section>
+
+<section class="slide">
+  <h2>🧮 Human Calculator</h2>
+  <p>Two teams! Choose an answer. Correct answers earn ⭐.</p>
+  <div class="team">
+    <div class="team-box"><h3>🔵 Team A</h3><div class="team-score" id="teamA">0</div></div>
+    <div class="team-box"><h3>🟠 Team B</h3><div class="team-score" id="teamB">0</div></div>
+  </div>
+  <div class="board">
+    <div>Challenge 1</div><div class="equation">3 L × 4 = ?</div>
+    <div class="answers">
+      <button onclick="teamAnswer(this,'A',true)">12 L</button>
+      <button onclick="teamAnswer(this,'A',false)">7 L</button>
+      <button onclick="teamAnswer(this,'A',false)">16 L</button>
+    </div>
+    <p id="teamFeedback"></p>
+  </div>
+  <p class="note">Teacher: Give the next question orally: <b>2000 mL ÷ 2 = ?</b> → 1000 mL = 1 L</p>
+</section>
+
+<section class="slide">
+  <h2>🛒 Real-Life Supermarket</h2>
+  <div class="question">
+    <h3>🥛 Problem 1</h3>
+    <p>A family buys 3 bottles of milk. Each contains 2 L. How much milk?</p>
+    <button class="primary" onclick="reveal('p1')">Reveal Answer</button>
+    <div id="p1" class="reveal">2 × 3 = <b>6 L</b> ✅</div>
+  </div>
+  <div class="question">
+    <h3>🧃 Problem 2</h3>
+    <p>A juice shop has 5 L. It fills 1 L bottles. How many bottles?</p>
+    <button class="primary" onclick="reveal('p2')">Reveal Answer</button>
+    <div id="p2" class="reveal">5 ÷ 1 = <b>5 bottles</b> ✅</div>
+  </div>
+  <div class="question">
+    <h3>💧 Problem 3</h3>
+    <p>8 L is divided equally among 4 children. How much each?</p>
+    <button class="primary" onclick="reveal('p3')">Reveal Answer</button>
+    <div id="p3" class="reveal">8 ÷ 4 = <b>2 L</b> per child ✅</div>
+  </div>
+</section>
+
+<section class="slide">
+  <h2>⭐ Challenge: Convert → Divide → Answer</h2>
+  <div class="board">
+    <p>A large bottle contains <b>3 L</b> of juice.</p>
+    <p>It is poured into <b>500 mL</b> cups.</p>
+    <p class="equation">How many cups can be filled?</p>
+  </div>
+  <div class="input-row">
+    <input id="challengeInput" type="number" placeholder="Your answer">
+    <button class="primary" onclick="checkChallenge()">Check Answer</button>
+  </div>
+  <div id="challengeFeedback" class="feedback" style="text-align:center"></div>
+  <div class="note">💡 Hint: First convert 3 L into mL. Then divide by 500.</div>
+</section>
+
+<section class="slide">
+  <div class="hero">
+    <div class="hero-card">
+      <div class="emoji">🏆🎉</div>
+      <h1>Capacity Champion!</h1>
+      <p class="subtitle">Let's remember the two golden rules:</p>
+      <div class="big-rule">1 L = 1000 mL</div>
+      <div class="rule-row">
+        <div class="rule">L → mL: ×1000</div>
+        <div class="rule">mL → L: ÷1000</div>
+      </div>
+      <p><b>Multiply</b> to find totals. <b>Divide</b> to share equally.</p>
+      <button class="primary" onclick="restart()">🔄 Start Again</button>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="nav">
+  <button id="prevBtn" onclick="prevSlide()">← Previous</button>
+  <span class="counter"><span id="current">1</span> / <span id="total"></span></span>
+  <button id="nextBtn" class="primary" onclick="nextSlide()">Next →</button>
+</footer>
+
+<script>
+let current=0, score=0, teamA=0, teamB=0;
+const slides=[...document.querySelectorAll('.slide')];
+document.getElementById('total').textContent=slides.length;
+
+function update(){
+  slides.forEach((s,i)=>s.classList.toggle('active',i===current));
+  document.getElementById('current').textContent=current+1;
+  document.getElementById('bar').style.width=((current)/(slides.length-1)*100)+'%';
+  document.getElementById('prevBtn').disabled=current===0;
+  document.getElementById('nextBtn').textContent=current===slides.length-1?'Finish':'Next →';
+}
+function nextSlide(){if(current<slides.length-1){current++;update()}}
+function prevSlide(){if(current>0){current--;update()}}
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key==='PageDown')nextSlide();
+  if(e.key==='ArrowLeft'||e.key==='PageUp')prevSlide();
+  if(e.key==='Home'){current=0;update()}
+  if(e.key==='End'){current=slides.length-1;update()}
+});
+function addScore(n=1){score+=n;document.getElementById('score').textContent=score}
+function answer(btn,correct,id){
+  const box=document.getElementById(id);
+  if(correct){btn.classList.add('good');box.innerHTML='✅ Correct! Great thinking!';box.className='feedback success';addScore()}
+  else{btn.classList.add('bad');box.innerHTML='❌ Not quite. Try again!';box.className='feedback danger'}
+}
+function chooseWarm(el,correct){
+  const f=document.getElementById('warmFeedback');
+  if(correct){el.style.borderColor='#22a06b';f.innerHTML='🎉 Correct! A bucket holds much more water.';f.className='feedback success';addScore()}
+  else{el.style.borderColor='#e55353';f.innerHTML='🤔 Try again! Which container is biggest?';f.className='feedback danger'}
+}
+function reveal(id){document.getElementById(id).classList.add('show')}
+function detective(btn,correct,id,msg){
+  const f=document.getElementById(id);
+  f.textContent=(correct?'✅ ':'❌ ')+msg;
+  f.className='feedback '+(correct?'success':'danger');
+  if(correct){btn.classList.add('good');addScore()}else btn.classList.add('bad')
+}
+function teamAnswer(btn,team,correct){
+  const f=document.getElementById('teamFeedback');
+  if(correct){
+    if(team==='A')teamA++;else teamB++;
+    document.getElementById('teamA').textContent=teamA;
+    document.getElementById('teamB').textContent=teamB;
+    btn.classList.add('good');f.textContent='🎉 Correct! +1 team point';f.className='success';addScore();
+  }else{btn.classList.add('bad');f.textContent='❌ Try again!';f.className='danger'}
+}
+function checkChallenge(){
+  const val=Number(document.getElementById('challengeInput').value);
+  const f=document.getElementById('challengeFeedback');
+  if(val===6){f.innerHTML='🎉 Perfect! 3 L = 3000 mL → 3000 ÷ 500 = <b>6 cups</b>!';f.className='feedback success';addScore(2)}
+  else{f.textContent='❌ Not yet. Hint: 3 L = 3000 mL, then divide by 500.';f.className='feedback danger'}
+}
+function restart(){current=0;score=0;teamA=0;teamB=0;document.getElementById('score').textContent=0;update()}
+update();
+</script>
+</body>
+</html>
